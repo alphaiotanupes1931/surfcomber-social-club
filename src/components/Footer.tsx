@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Facebook } from "lucide-react";
+import { motion } from "framer-motion";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   return (
@@ -9,13 +11,16 @@ const Footer = () => {
           {/* Logo & Address */}
           <div>
             <Link to="/" className="inline-flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full border-2 border-primary flex items-center justify-center">
-                <span className="font-serif text-primary text-lg">SC</span>
-              </div>
+              <motion.img 
+                src={logo} 
+                alt="AI Social Klub Logo" 
+                className="w-14 h-14 object-contain"
+                whileHover={{ scale: 1.05 }}
+              />
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              1717 Collins Avenue<br />
-              Miami Beach, FL 33139
+              The AI Social Klub<br />
+              Baltimore, MD
             </p>
           </div>
 
@@ -25,20 +30,17 @@ const Footer = () => {
               Explore
             </h4>
             <nav className="flex flex-col gap-3">
-              <Link to="/about" className="text-muted-foreground text-sm hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link to="/menus" className="text-muted-foreground text-sm hover:text-primary transition-colors">
-                Menus
-              </Link>
-              <Link to="/private-dining" className="text-muted-foreground text-sm hover:text-primary transition-colors">
-                Private Dining
-              </Link>
               <Link to="/events" className="text-muted-foreground text-sm hover:text-primary transition-colors">
                 Special Events
               </Link>
+              <Link to="/menus" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                Drink Menu
+              </Link>
               <Link to="/gallery" className="text-muted-foreground text-sm hover:text-primary transition-colors">
                 Gallery
+              </Link>
+              <Link to="/calendar" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                Calendar
               </Link>
             </nav>
           </div>
@@ -49,39 +51,45 @@ const Footer = () => {
               Connect
             </h4>
             <div className="flex gap-4 mb-6">
-              <a
+              <motion.a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 border border-foreground/20 flex items-center justify-center 
                            hover:bg-primary hover:border-primary transition-colors"
                 aria-label="Instagram"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <Instagram size={18} />
-              </a>
-              <a
+              </motion.a>
+              <motion.a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 border border-foreground/20 flex items-center justify-center 
                            hover:bg-primary hover:border-primary transition-colors"
                 aria-label="Facebook"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <Facebook size={18} />
-              </a>
+              </motion.a>
             </div>
-            <a
+            <motion.a
               href="#reserve"
               className="btn-primary inline-block text-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Reserve
-            </a>
+              RSVP
+            </motion.a>
           </div>
         </div>
 
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} The Social Club. All rights reserved.
+            © {new Date().getFullYear()} The AI Social Klub. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface FeatureCardProps {
   image: string;
@@ -18,13 +19,19 @@ const FeatureCard = ({
   linkText,
 }: FeatureCardProps) => {
   return (
-    <div className="card-feature relative h-[500px] lg:h-[600px]">
-      <img
+    <motion.div 
+      className="card-feature relative h-[500px] lg:h-[600px] group"
+      whileHover={{ y: -10 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.img
         src={image}
         alt={title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        className="absolute inset-0 w-full h-full object-cover"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.7 }}
       />
-      <div className="card-feature-overlay" />
+      <div className="card-feature-overlay group-hover:from-background/95" />
       
       <div className="relative z-10 h-full flex flex-col justify-end p-8 lg:p-10">
         <span className="section-subtitle mb-3">{category}</span>
@@ -37,13 +44,18 @@ const FeatureCard = ({
         <Link
           to={link}
           className="text-xs tracking-[0.2em] uppercase text-primary font-medium 
-                     hover:text-foreground transition-colors inline-flex items-center gap-2"
+                     hover:text-foreground transition-colors inline-flex items-center gap-2 group/link"
         >
           {linkText}
-          <span className="text-lg">→</span>
+          <motion.span 
+            className="text-lg"
+            whileHover={{ x: 5 }}
+          >
+            →
+          </motion.span>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import terraceImage from "@/assets/terrace.jpg";
-import interiorImage from "@/assets/restaurant-interior.jpg";
-import privateDiningImage from "@/assets/private-dining.jpg";
+import { motion, useInView } from "framer-motion";
+import baltimoreImage from "@/assets/baltimore-skyline.jpg";
+import drinksImage from "@/assets/drinks.jpg";
+import fellowshipImage from "@/assets/fellowship.jpg";
 
-const galleryImages = [terraceImage, interiorImage, privateDiningImage];
+const galleryImages = [baltimoreImage, drinksImage, fellowshipImage];
 
 const LocationSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const next = () => {
     setActiveIndex((prev) => (prev + 1) % galleryImages.length);
@@ -18,53 +21,76 @@ const LocationSection = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 bg-background">
+    <section className="py-24 lg:py-32 bg-background" ref={ref}>
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Gallery */}
-          <div className="relative">
+          <motion.div 
+            className="relative"
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8 }}
+          >
             <div className="aspect-[4/3] overflow-hidden">
-              <img
+              <motion.img
+                key={activeIndex}
                 src={galleryImages[activeIndex]}
-                alt="The Social Club Miami Beach"
-                className="w-full h-full object-cover transition-opacity duration-500"
+                alt="The AI Social Klub Baltimore"
+                className="w-full h-full object-cover"
+                initial={{ opacity: 0, scale: 1.1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
               />
             </div>
             
             {/* Navigation */}
             <div className="absolute bottom-4 right-4 flex gap-2">
-              <button
+              <motion.button
                 onClick={prev}
                 className="w-10 h-10 bg-background/80 backdrop-blur-sm flex items-center justify-center 
                            hover:bg-primary transition-colors"
                 aria-label="Previous image"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <ChevronLeft size={18} />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 onClick={next}
                 className="w-10 h-10 bg-background/80 backdrop-blur-sm flex items-center justify-center 
                            hover:bg-primary transition-colors"
                 aria-label="Next image"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <ChevronRight size={18} />
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Content */}
-          <div>
-            <h2 className="section-title mb-8">miami beach</h2>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <h2 className="section-title mb-8">baltimore</h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Join us at 1717 Collins Avenue for brunch, happy hour, or unforgettable 
-              dinner experiences. Our open-air terraces and art-filled spaces create 
-              perfect backdrops for memorable moments in the heart of South Beach's 
-              cultural scene.
+              Located in the heart of Baltimore, The AI Social Klub offers an 
+              exclusive sanctuary for gentlemen seeking premium experiences. 
+              Our sophisticated venue features private lounges, gaming areas, 
+              and a world-class bar—all designed for those who appreciate the 
+              finer things in life.
             </p>
-            <a href="/location" className="btn-outline inline-block">
+            <motion.a 
+              href="/location" 
+              className="btn-outline inline-block"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               Hours & Location
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </div>
       </div>
     </section>

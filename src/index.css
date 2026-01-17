@@ -15,7 +15,7 @@
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 65% 58%;
+    --primary: 0 72% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 18%;
@@ -24,7 +24,7 @@
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 35 45% 55%;
+    --accent: 0 65% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -32,7 +32,7 @@
 
     --border: 0 0% 25%;
     --input: 0 0% 25%;
-    --ring: 0 65% 58%;
+    --ring: 0 72% 50%;
 
     --radius: 0px;
 
@@ -41,9 +41,9 @@
     --font-sans: 'Montserrat', system-ui, sans-serif;
     
     --hero-overlay: linear-gradient(to bottom, 
-      hsla(0, 0%, 0%, 0.3) 0%, 
-      hsla(0, 0%, 0%, 0.1) 50%,
-      hsla(0, 0%, 0%, 0.4) 100%
+      hsla(0, 0%, 0%, 0.5) 0%, 
+      hsla(0, 0%, 0%, 0.3) 50%,
+      hsla(0, 0%, 0%, 0.7) 100%
     );
 
     --sidebar-background: 0 0% 98%;
@@ -63,19 +63,19 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 65% 58%;
+    --primary: 0 72% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 18%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 65%;
-    --accent: 35 45% 55%;
+    --accent: 0 65% 45%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 25%;
     --input: 0 0% 25%;
-    --ring: 0 65% 58%;
+    --ring: 0 72% 50%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -109,7 +109,16 @@
 @layer components {
   .nav-link {
     @apply text-xs font-medium tracking-[0.2em] uppercase text-foreground/90 
-           hover:text-primary transition-colors duration-300;
+           hover:text-primary transition-colors duration-300 relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-px bg-primary transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
   }
 
   .section-title {
@@ -127,13 +136,13 @@
   .btn-primary {
     @apply bg-primary text-primary-foreground px-8 py-3 text-xs font-medium 
            tracking-[0.2em] uppercase transition-all duration-300 
-           hover:bg-primary/90 border border-primary;
+           hover:bg-primary/90 border border-primary hover:shadow-lg hover:shadow-primary/20;
   }
 
   .btn-outline {
     @apply bg-transparent border border-foreground/80 text-foreground px-8 py-3 
            text-xs font-medium tracking-[0.2em] uppercase transition-all duration-300 
-           hover:bg-foreground hover:text-background;
+           hover:bg-foreground hover:text-background hover:border-foreground;
   }
 
   .card-feature {
@@ -142,12 +151,52 @@
 
   .card-feature-overlay {
     @apply absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent 
-           transition-all duration-500 group-hover:from-background/95;
+           transition-all duration-500;
+  }
+
+  /* Smooth scroll reveal animation classes */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Glow effect for primary elements */
+  .glow-primary {
+    box-shadow: 0 0 20px hsla(0, 72%, 50%, 0.3);
+  }
+
+  /* Image hover zoom effect */
+  .img-zoom {
+    @apply overflow-hidden;
+  }
+
+  .img-zoom img {
+    @apply transition-transform duration-700 ease-out;
+  }
+
+  .img-zoom:hover img {
+    @apply scale-110;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-background/60 backdrop-blur-lg border border-foreground/10;
   }
 }

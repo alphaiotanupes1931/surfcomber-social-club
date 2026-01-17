@@ -1,48 +1,70 @@
-import restaurantImage from "@/assets/restaurant-interior.jpg";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import aboutImage from "@/assets/about-image.jpg";
 
 const About = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <section className="py-24 lg:py-32 bg-background">
+    <section className="py-24 lg:py-32 bg-background" ref={ref}>
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Text Content */}
-          <div className="order-2 lg:order-1">
+          <motion.div 
+            className="order-2 lg:order-1"
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <h2 className="section-title mb-8">
-              Get Social in South Beach
+              Get Social in Baltimore
             </h2>
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
-                Nestled in the heart of South Beach, The Social Club offers a fresh, 
-                ingredient-driven take on French Mediterranean cuisine, blending bold 
-                coastal flavors with a modern, lighter approach.
+                Welcome to The AI Social Klub, Baltimore's premier destination for 
+                brotherhood, networking, and unforgettable experiences. Where 
+                ambitious men come together to build lasting connections.
               </p>
               <p>
-                Our menu is designed for sharing, featuring vibrant small plates like 
-                Mezzo Board and Tuna Tartar. Signature entrées highlight the best of 
-                land and sea, from Snapper en Papillote to Filet Mignon with truffled 
-                bistro fries.
+                Our exclusive club offers a sophisticated atmosphere for professionals 
+                and entrepreneurs to unwind, connect, and elevate. From premium spirits 
+                to high-stakes games, every detail is crafted for the modern gentleman.
               </p>
               <p>
-                By day, our renowned brunch delivers indulgent favorites with a creative 
-                twist—pair your meal with bottomless cocktails, and let the vibrant 
-                energy of Miami Beach complete the experience.
+                Join a community that values excellence, loyalty, and the art of 
+                celebration. Whether it's game night, networking events, or simply 
+                enjoying good company—this is where legends are made.
               </p>
             </div>
-            <a href="/about" className="btn-outline inline-block mt-10">
+            <motion.a 
+              href="/about" 
+              className="btn-outline inline-block mt-10"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               Learn More
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
 
           {/* Image */}
-          <div className="order-1 lg:order-2">
+          <motion.div 
+            className="order-1 lg:order-2"
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          >
             <div className="relative aspect-[4/5] overflow-hidden">
-              <img
-                src={restaurantImage}
-                alt="The Social Club restaurant interior"
+              <motion.img
+                src={aboutImage}
+                alt="The AI Social Klub experience"
                 className="w-full h-full object-cover"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.6 }}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

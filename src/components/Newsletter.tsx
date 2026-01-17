@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Instagram, Facebook } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -12,12 +15,17 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 bg-secondary">
+    <section className="py-24 lg:py-32 bg-secondary" ref={ref}>
       <div className="container mx-auto px-6">
-        <div className="max-w-xl mx-auto text-center">
+        <motion.div 
+          className="max-w-xl mx-auto text-center"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className="section-title mb-6">stay connected</h2>
           <p className="text-muted-foreground mb-10">
-            Receive exclusive updates about chef events and seasonal offerings.
+            Receive exclusive updates about events, members-only gatherings, and special occasions.
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
@@ -31,9 +39,14 @@ const Newsletter = () => {
                          text-foreground placeholder:text-muted-foreground 
                          focus:outline-none focus:border-primary transition-colors"
             />
-            <button type="submit" className="btn-primary">
+            <motion.button 
+              type="submit" 
+              className="btn-primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               Sign Up
-            </button>
+            </motion.button>
           </form>
 
           <p className="text-xs text-muted-foreground mt-6">
@@ -46,26 +59,28 @@ const Newsletter = () => {
 
           {/* Social Links */}
           <div className="flex justify-center gap-6 mt-12">
-            <a
+            <motion.a
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground/60 hover:text-primary transition-colors"
               aria-label="Instagram"
+              whileHover={{ scale: 1.2, rotate: 5 }}
             >
               <Instagram size={24} />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground/60 hover:text-primary transition-colors"
               aria-label="Facebook"
+              whileHover={{ scale: 1.2, rotate: -5 }}
             >
               <Facebook size={24} />
-            </a>
+            </motion.a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

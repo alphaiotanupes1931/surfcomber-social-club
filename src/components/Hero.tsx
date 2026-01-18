@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import RSVPModal from "./RSVPModal";
+import { useNavigate } from "react-router-dom";
+import { Volume2, VolumeX } from "lucide-react";
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
-  const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const fullText = "the ai social klub";
   const videoRef = useRef<HTMLVideoElement>(null);
+  const navigate = useNavigate();
   
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
@@ -22,7 +24,6 @@ const Hero = () => {
         currentIndex++;
       } else {
         clearInterval(typingInterval);
-        // Hide cursor after typing is done
         setTimeout(() => setShowCursor(false), 500);
       }
     }, 100);
@@ -30,14 +31,20 @@ const Hero = () => {
     return () => clearInterval(typingInterval);
   }, []);
 
-  // Ensure video plays
+  // Ensure video plays muted first (browser requirement)
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay might be blocked, user interaction needed
-      });
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
     }
   }, []);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
 
   return (
     <section className="relative h-screen w-full overflow-hidden">
@@ -48,7 +55,7 @@ const Hero = () => {
             ref={videoRef}
             autoPlay
             loop
-            muted={false}
+            muted
             playsInline
             className="w-full h-full object-cover"
             style={{
@@ -66,7 +73,7 @@ const Hero = () => {
             />
           </video>
         </div>
-        {/* Dark tint overlay for text visibility */}
+        {/* Dark tint overlay */}
         <div
           className="absolute inset-0 z-10"
           style={{
@@ -75,6 +82,19 @@ const Hero = () => {
           }}
         />
       </motion.div>
+
+      {/* Mute/Unmute Button */}
+      <motion.button
+        onClick={toggleMute}
+        className="absolute bottom-24 right-6 z-30 w-12 h-12 bg-background/30 backdrop-blur-sm 
+                   flex items-center justify-center hover:bg-primary transition-colors"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3 }}
+        aria-label={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+      </motion.button>
 
       {/* Content */}
       <motion.div 
@@ -91,7 +111,7 @@ const Hero = () => {
           {showCursor && <span className="animate-pulse">|</span>}
         </motion.h1>
         <motion.button
-          onClick={() => setIsRSVPOpen(true)}
+          onClick={() => navigate('/upcoming')}
           className="btn-primary"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,8 +133,6 @@ const Hero = () => {
       >
         <div className="w-px h-16 bg-foreground/30" />
       </motion.div>
-
-      <RSVPModal isOpen={isRSVPOpen} onClose={() => setIsRSVPOpen(false)} />
     </section>
   );
 };

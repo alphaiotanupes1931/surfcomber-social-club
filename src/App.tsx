@@ -27,7 +27,6 @@ const App = () => (
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/upcoming" element={<UpcomingPage />} />
           <Route path="/events" element={<UpcomingPage />} />
-          <Route path="/calendar" element={<UpcomingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

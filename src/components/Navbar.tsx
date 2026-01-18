@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Menu, X, Heart } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
-import RSVPModal from "./RSVPModal";
 
 const navLinks = [
-  { name: "Special Events", href: "/events" },
+  { name: "Special Events", href: "/upcoming" },
   { name: "Drink Menu", href: "/menus" },
   { name: "Gallery", href: "/gallery" },
-  { name: "Upcoming", href: "/upcoming" },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +34,7 @@ const Navbar = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
-          {/* Logo - Made bigger */}
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <motion.img 
               src={logo} 
@@ -63,15 +61,24 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* RSVP Button */}
+          {/* Right Side Buttons */}
           <motion.div 
-            className="hidden lg:block"
+            className="hidden lg:flex items-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
+            <a
+              href="https://donate.stripe.com/your-donation-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline inline-flex items-center gap-2"
+            >
+              <Heart size={16} />
+              Donate
+            </a>
             <button
-              onClick={() => setIsRSVPOpen(true)}
+              onClick={() => navigate('/upcoming')}
               className="btn-primary inline-block"
             >
               RSVP
@@ -130,12 +137,27 @@ const Navbar = () => {
                     </Link>
                   </motion.div>
                 ))}
+                
+                <motion.a
+                  href="https://donate.stripe.com/your-donation-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-outline inline-flex items-center justify-center gap-2 mt-4"
+                  onClick={() => setIsOpen(false)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <Heart size={16} />
+                  Donate
+                </motion.a>
+                
                 <motion.button
                   onClick={() => {
                     setIsOpen(false);
-                    setIsRSVPOpen(true);
+                    navigate('/upcoming');
                   }}
-                  className="btn-primary inline-block text-center mt-6"
+                  className="btn-primary inline-block text-center mt-2"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -147,8 +169,6 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <RSVPModal isOpen={isRSVPOpen} onClose={() => setIsRSVPOpen(false)} />
     </>
   );
 };

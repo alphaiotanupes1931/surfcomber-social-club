@@ -1,9 +1,13 @@
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import upcomingEventImage from "@/assets/upcoming-event.jpg";
+import RSVPModal from "@/components/RSVPModal";
 
 const UpcomingPage = () => {
+  const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -18,7 +22,7 @@ const UpcomingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            upcoming events
+            special events
           </motion.h1>
         </div>
       </section>
@@ -50,6 +54,24 @@ const UpcomingPage = () => {
                 className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105"
               />
             </div>
+            
+            {/* RSVP Button */}
+            <motion.div 
+              className="text-center mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <motion.button
+                onClick={() => setIsRSVPOpen(true)}
+                className="btn-primary text-lg px-10 py-4"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                RSVP NOW
+              </motion.button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -80,6 +102,8 @@ const UpcomingPage = () => {
       </section>
 
       <Footer />
+      
+      <RSVPModal isOpen={isRSVPOpen} onClose={() => setIsRSVPOpen(false)} />
     </div>
   );
 };

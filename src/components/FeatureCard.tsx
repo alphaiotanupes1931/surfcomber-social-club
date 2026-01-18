@@ -31,20 +31,21 @@ const FeatureCard = ({
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.7 }}
       />
-      <div className="card-feature-overlay group-hover:from-background/95" />
+      {/* Strong tint overlay for text visibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 group-hover:from-black/95" />
       
       <div className="relative z-10 h-full flex flex-col justify-end p-8 lg:p-10">
         <span className="section-subtitle mb-3">{category}</span>
-        <h3 className="font-serif text-2xl lg:text-3xl font-light mb-4 lowercase tracking-wide">
+        <h3 className="font-serif text-2xl lg:text-3xl font-light mb-4 lowercase tracking-wide text-white">
           {title}
         </h3>
-        <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-sm">
+        <p className="text-white/80 text-sm leading-relaxed mb-6 max-w-sm">
           {description}
         </p>
         <Link
           to={link}
           className="text-xs tracking-[0.2em] uppercase text-primary font-medium 
-                     hover:text-foreground transition-colors inline-flex items-center gap-2 group/link"
+                     hover:text-white transition-colors inline-flex items-center gap-2 group/link"
         >
           {linkText}
           <motion.span 

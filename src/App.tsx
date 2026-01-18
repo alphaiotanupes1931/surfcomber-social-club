@@ -8,6 +8,7 @@ import AboutPage from "./pages/AboutPage";
 import MenusPage from "./pages/MenusPage";
 import LocationPage from "./pages/LocationPage";
 import GalleryPage from "./pages/GalleryPage";
+import UpcomingPage from "./pages/UpcomingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,8 +25,9 @@ const App = () => (
           <Route path="/menus" element={<MenusPage />} />
           <Route path="/location" element={<LocationPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/private-dining" element={<AboutPage />} />
-          <Route path="/events" element={<AboutPage />} />
+          <Route path="/upcoming" element={<UpcomingPage />} />
+          <Route path="/events" element={<UpcomingPage />} />
+          <Route path="/calendar" element={<UpcomingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

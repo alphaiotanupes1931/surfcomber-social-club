@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import FeatureCard from "./FeatureCard";
@@ -11,19 +11,19 @@ const features = [
   {
     image: drinksImage,
     category: "Drinks",
-    title: "premium bar experience",
+    title: "open bars",
     description:
-      "Handcrafted cocktails, top-shelf whiskey, and curated selections. Our bartenders craft the perfect drink for every occasion.",
+      "Premium spirits, craft cocktails, and top-shelf selections. Our bartenders keep the drinks flowing all night long.",
     link: "/menus",
     linkText: "View Menu",
   },
   {
     image: entertainmentImage,
     category: "Entertainment",
-    title: "live music & events",
+    title: "live entertainment",
     description:
       "From live DJs to special performances, we bring the energy. Every night is an experience you won't forget.",
-    link: "/events",
+    link: "/upcoming",
     linkText: "See Events",
   },
   {
@@ -32,7 +32,7 @@ const features = [
     title: "high-stakes excitement",
     description:
       "Poker nights, dice games, and friendly competition. Test your skills and enjoy the thrill of the game.",
-    link: "/events",
+    link: "/upcoming",
     linkText: "Join Us",
   },
   {
@@ -50,6 +50,26 @@ const DiscoverSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const [displayText, setDisplayText] = useState("");
+  const [hasTyped, setHasTyped] = useState(false);
+  const fullText = "experience brotherhood";
+
+  useEffect(() => {
+    if (isInView && !hasTyped) {
+      let currentIndex = 0;
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= fullText.length) {
+          setDisplayText(fullText.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 50);
+      setHasTyped(true);
+      return () => clearInterval(typingInterval);
+    }
+  }, [isInView, hasTyped]);
 
   const next = () => {
     setActiveIndex((prev) => (prev + 1) % features.length);
@@ -68,7 +88,10 @@ const DiscoverSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          experience brotherhood
+          {displayText}
+          {!hasTyped || displayText.length < fullText.length ? (
+            <span className="animate-pulse">|</span>
+          ) : null}
         </motion.h2>
 
         {/* Desktop Grid */}

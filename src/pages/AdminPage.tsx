@@ -171,14 +171,33 @@ const AdminPage = () => {
 
   // Event handlers
   const handleSaveEvent = async () => {
+    // Validate required fields
+    if (!eventForm.title.trim()) {
+      alert("Please enter an event title");
+      return;
+    }
+    if (!eventForm.event_date) {
+      alert("Please select an event date");
+      return;
+    }
+
     try {
+      const eventData = {
+        title: eventForm.title.trim(),
+        description: eventForm.description.trim() || null,
+        event_date: eventForm.event_date,
+        location: eventForm.location.trim() || null,
+        image_url: eventForm.image_url.trim() || null,
+        is_active: true
+      };
+
       if (editingEvent) {
         await supabase.functions.invoke("admin-api", {
-          body: { adminKey, action: "updateEvent", data: { id: editingEvent.id, ...eventForm, is_active: true } }
+          body: { adminKey, action: "updateEvent", data: { id: editingEvent.id, ...eventData } }
         });
       } else {
         await supabase.functions.invoke("admin-api", {
-          body: { adminKey, action: "createEvent", data: { ...eventForm, is_active: true } }
+          body: { adminKey, action: "createEvent", data: eventData }
         });
       }
       await fetchEvents();
@@ -187,6 +206,7 @@ const AdminPage = () => {
       setEventForm({ title: "", description: "", event_date: "", location: "", image_url: "" });
     } catch (error) {
       console.error("Error saving event:", error);
+      alert("Failed to save event. Please try again.");
     }
   };
 

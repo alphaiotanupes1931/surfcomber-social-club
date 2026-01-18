@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Download, Mail, Users, Send, Eye, EyeOff, Calendar, Image, Wine, Plus, Trash2, Edit2, X } from "lucide-react";
+import { Download, Mail, Users, Send, Eye, EyeOff, Calendar, Image, Wine, Plus, Trash2, Edit2, X, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface RSVP {
@@ -77,6 +77,7 @@ const AdminPage = () => {
   const [eventForm, setEventForm] = useState({ title: "", description: "", event_date: "", location: "", image_url: "" });
   const [drinkForm, setDrinkForm] = useState({ name: "", description: "", price: "", category: "cocktails" });
   const [uploading, setUploading] = useState(false);
+  const [eventImageUploading, setEventImageUploading] = useState(false);
 
   const authenticate = async () => {
     setLoading(true);
@@ -186,6 +187,31 @@ const AdminPage = () => {
       setEventForm({ title: "", description: "", event_date: "", location: "", image_url: "" });
     } catch (error) {
       console.error("Error saving event:", error);
+    }
+  };
+
+  const handleEventImageUpload = async (file: File) => {
+    setEventImageUploading(true);
+    try {
+      // Get signed upload URL
+      const { data: urlData } = await supabase.functions.invoke("admin-api", {
+        body: { adminKey, action: "getUploadUrl", data: { fileName: file.name } }
+      });
+
+      // Upload file
+      await fetch(urlData.signedUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type }
+      });
+
+      // Set the image URL in the form
+      setEventForm(prev => ({ ...prev, image_url: urlData.publicUrl }));
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Image upload failed");
+    } finally {
+      setEventImageUploading(false);
     }
   };
 
@@ -519,8 +545,39 @@ const AdminPage = () => {
               <textarea placeholder="Description" value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} rows={3} className="w-full bg-transparent border border-foreground/30 px-4 py-3 text-foreground resize-none" />
               <input type="date" value={eventForm.event_date} onChange={(e) => setEventForm({ ...eventForm, event_date: e.target.value })} className="w-full bg-transparent border border-foreground/30 px-4 py-3 text-foreground" />
               <input type="text" placeholder="Location" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} className="w-full bg-transparent border border-foreground/30 px-4 py-3 text-foreground" />
-              <input type="text" placeholder="Image URL (optional)" value={eventForm.image_url} onChange={(e) => setEventForm({ ...eventForm, image_url: e.target.value })} className="w-full bg-transparent border border-foreground/30 px-4 py-3 text-foreground" />
-              <button onClick={handleSaveEvent} className="btn-primary w-full">Save Event</button>
+              
+              {/* Image Upload Section */}
+              <div className="space-y-2">
+                <label className="block text-xs uppercase tracking-wider text-muted-foreground">Event Image</label>
+                {eventForm.image_url && (
+                  <div className="relative w-full h-40 mb-2">
+                    <img src={eventForm.image_url} alt="Event preview" className="w-full h-full object-cover rounded" />
+                    <button 
+                      type="button"
+                      onClick={() => setEventForm({ ...eventForm, image_url: "" })}
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
+                <label className="btn-outline inline-flex items-center gap-2 text-sm cursor-pointer w-full justify-center">
+                  <Upload size={16} /> {eventImageUploading ? "Uploading..." : "Upload Image"}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    onChange={(e) => e.target.files?.[0] && handleEventImageUpload(e.target.files[0])} 
+                    disabled={eventImageUploading} 
+                  />
+                </label>
+                <p className="text-xs text-muted-foreground text-center">or paste an image URL below</p>
+                <input type="text" placeholder="Image URL (optional)" value={eventForm.image_url} onChange={(e) => setEventForm({ ...eventForm, image_url: e.target.value })} className="w-full bg-transparent border border-foreground/30 px-4 py-3 text-foreground text-sm" />
+              </div>
+              
+              <button onClick={handleSaveEvent} disabled={eventImageUploading} className="btn-primary w-full">
+                {eventImageUploading ? "Uploading..." : "Save Event"}
+              </button>
             </div>
           </div>
         </div>

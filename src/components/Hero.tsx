@@ -1,52 +1,70 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import RSVPModal from "./RSVPModal";
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState("");
+  const [showCursor, setShowCursor] = useState(true);
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
   const fullText = "the ai social klub";
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0.3]);
 
+  // Typing animation effect
   useEffect(() => {
     let currentIndex = 0;
     const typingInterval = setInterval(() => {
       if (currentIndex <= fullText.length) {
-        setDisplayText(fullText.slice(0, currentIndex));
+        setDisplayText(fullText.substring(0, currentIndex));
         currentIndex++;
       } else {
         clearInterval(typingInterval);
+        // Hide cursor after typing is done
+        setTimeout(() => setShowCursor(false), 500);
       }
     }, 100);
 
     return () => clearInterval(typingInterval);
   }, []);
 
+  // Ensure video plays
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay might be blocked, user interaction needed
+      });
+    }
+  }, []);
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background Video with Parallax */}
       <motion.div className="absolute inset-0" style={{ y }}>
-        <div className="absolute inset-0 scale-150">
-          <iframe
-            src="https://www.youtube.com/embed/S_3ZQM_vLQo?autoplay=1&mute=0&loop=1&playlist=S_3ZQM_vLQo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=1"
-            title="Background Video"
-            className="w-full h-full pointer-events-none"
+        <div className="absolute inset-0 scale-125">
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted={false}
+            playsInline
+            className="w-full h-full object-cover"
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '200vw',
-              height: '200vh',
               minWidth: '100%',
               minHeight: '100%',
             }}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          >
+            <source 
+              src="https://res.cloudinary.com/ddfe8uqth/video/upload/videoplayback_edyrjz.mp4" 
+              type="video/mp4" 
+            />
+          </video>
         </div>
         {/* Dark tint overlay for text visibility */}
         <div
@@ -70,14 +88,14 @@ const Hero = () => {
           transition={{ duration: 0.5 }}
         >
           {displayText}
-          <span className="animate-pulse">|</span>
+          {showCursor && <span className="animate-pulse">|</span>}
         </motion.h1>
         <motion.button
           onClick={() => setIsRSVPOpen(true)}
           className="btn-primary"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.5 }}
+          transition={{ delay: 2.5, duration: 0.5 }}
         >
           RSVP
         </motion.button>
@@ -89,7 +107,7 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ 
-          opacity: { delay: 2.5, duration: 0.5 },
+          opacity: { delay: 3, duration: 0.5 },
           y: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
         }}
       >

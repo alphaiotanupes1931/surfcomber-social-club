@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       rsvps: {
         Row: {
           created_at: string
@@ -43,7 +61,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_all_rsvps: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "rsvps"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_all_subscribers: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "newsletter_subscribers"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       [_ in never]: never

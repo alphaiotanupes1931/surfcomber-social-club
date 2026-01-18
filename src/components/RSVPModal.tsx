@@ -49,6 +49,7 @@ const RSVPModal = ({ isOpen, onClose }: RSVPModalProps) => {
     setIsSubmitting(true);
 
     try {
+      // Save to database
       const { error } = await supabase.from("rsvps").insert({
         name: result.data.name,
         email: result.data.email,
@@ -56,6 +57,15 @@ const RSVPModal = ({ isOpen, onClose }: RSVPModalProps) => {
       });
 
       if (error) throw error;
+
+      // Send confirmation email (fire and forget)
+      supabase.functions.invoke("send-rsvp-email", {
+        body: {
+          name: result.data.name,
+          email: result.data.email,
+          phone: result.data.phone,
+        }
+      }).catch(console.error);
 
       setIsSuccess(true);
       setFormData({ name: "", email: "", phone: "" });

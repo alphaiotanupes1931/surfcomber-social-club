@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "@/assets/logo.png";
+import RSVPModal from "./RSVPModal";
 
 const Footer = () => {
+  const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+
   return (
     <footer className="py-16 bg-background border-t border-border">
       <div className="container mx-auto px-6">
@@ -14,7 +17,7 @@ const Footer = () => {
               <motion.img 
                 src={logo} 
                 alt="AI Social Klub Logo" 
-                className="w-14 h-14 object-contain"
+                className="w-16 h-16 object-contain"
                 whileHover={{ scale: 1.05 }}
               />
             </Link>
@@ -39,51 +42,25 @@ const Footer = () => {
               <Link to="/gallery" className="text-muted-foreground text-sm hover:text-primary transition-colors">
                 Gallery
               </Link>
-              <Link to="/calendar" className="text-muted-foreground text-sm hover:text-primary transition-colors">
-                Calendar
+              <Link to="/upcoming" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                Upcoming
               </Link>
             </nav>
           </div>
 
-          {/* Contact & Social */}
+          {/* RSVP */}
           <div>
             <h4 className="text-xs tracking-[0.2em] uppercase font-medium mb-6">
-              Connect
+              Join Us
             </h4>
-            <div className="flex gap-4 mb-6">
-              <motion.a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 border border-foreground/20 flex items-center justify-center 
-                           hover:bg-primary hover:border-primary transition-colors"
-                aria-label="Instagram"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Instagram size={18} />
-              </motion.a>
-              <motion.a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 border border-foreground/20 flex items-center justify-center 
-                           hover:bg-primary hover:border-primary transition-colors"
-                aria-label="Facebook"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Facebook size={18} />
-              </motion.a>
-            </div>
-            <motion.a
-              href="#reserve"
+            <motion.button
+              onClick={() => setIsRSVPOpen(true)}
               className="btn-primary inline-block text-center"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               RSVP
-            </motion.a>
+            </motion.button>
           </div>
         </div>
 
@@ -101,6 +78,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      <RSVPModal isOpen={isRSVPOpen} onClose={() => setIsRSVPOpen(false)} />
     </footer>
   );
 };

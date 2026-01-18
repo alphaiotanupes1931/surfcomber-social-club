@@ -1,21 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import heroImage from "@/assets/hero-dish.jpg";
-import cocktailsImage from "@/assets/cocktails.jpg";
-import interiorImage from "@/assets/restaurant-interior.jpg";
-import terraceImage from "@/assets/terrace.jpg";
-import privateDiningImage from "@/assets/private-dining.jpg";
-
-const galleryImages = [
-  { src: heroImage, alt: "Signature gourmet dish" },
-  { src: cocktailsImage, alt: "Craft cocktails" },
-  { src: interiorImage, alt: "Restaurant interior" },
-  { src: terraceImage, alt: "Outdoor terrace" },
-  { src: privateDiningImage, alt: "Private dining room" },
-  { src: heroImage, alt: "Chef's special" },
-  { src: cocktailsImage, alt: "Signature drinks" },
-  { src: interiorImage, alt: "Dining atmosphere" },
-];
+import { motion } from "framer-motion";
 
 const GalleryPage = () => {
   return (
@@ -23,38 +8,31 @@ const GalleryPage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16">
-        <div className="container mx-auto px-6 text-center">
-          <h1 className="hero-title text-foreground mb-6">visual stories</h1>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Explore our vibrant atmosphere and culinary artistry through 
-            moments captured at The Social Club.
-          </p>
+      <section className="relative h-[40vh] w-full overflow-hidden">
+        <div className="absolute inset-0 bg-secondary" />
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <motion.h1 
+            className="hero-title text-foreground"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            gallery
+          </motion.h1>
         </div>
       </section>
 
-      {/* Gallery Grid */}
-      <section className="pb-24 lg:pb-32">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {galleryImages.map((image, index) => (
-              <div
-                key={index}
-                className={`overflow-hidden group cursor-pointer ${
-                  index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
-                }`}
-              >
-                <div className={`${index === 0 ? "aspect-square" : "aspect-square"} overflow-hidden`}>
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover transition-transform duration-700 
-                               group-hover:scale-110"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Coming Soon */}
+      <section className="py-24 lg:py-32">
+        <div className="container mx-auto px-6 text-center">
+          <motion.p 
+            className="text-muted-foreground text-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            Coming Soon
+          </motion.p>
         </div>
       </section>
 

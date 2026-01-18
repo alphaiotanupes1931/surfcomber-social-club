@@ -1,11 +1,30 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import aboutImage from "@/assets/about-image.jpg";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import diceImage from "@/assets/dice-hero.jpg";
 
 const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const [displayText, setDisplayText] = useState("");
+  const [hasTyped, setHasTyped] = useState(false);
+  const fullText = "Get Social in Baltimore";
+
+  useEffect(() => {
+    if (isInView && !hasTyped) {
+      let currentIndex = 0;
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= fullText.length) {
+          setDisplayText(fullText.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 50);
+      setHasTyped(true);
+      return () => clearInterval(typingInterval);
+    }
+  }, [isInView, hasTyped]);
 
   return (
     <section className="py-24 lg:py-32 bg-background" ref={ref}>
@@ -19,7 +38,10 @@ const About = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h2 className="section-title mb-8">
-              Get Social in Baltimore
+              {displayText}
+              {!hasTyped || displayText.length < fullText.length ? (
+                <span className="animate-pulse">|</span>
+              ) : null}
             </h2>
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
@@ -29,12 +51,12 @@ const About = () => {
               </p>
               <p>
                 Our exclusive club offers a sophisticated atmosphere for professionals 
-                and entrepreneurs to unwind, connect, and elevate. From premium spirits 
+                and entrepreneurs to unwind, connect, and elevate. From open bars 
                 to high-stakes games, every detail is crafted for the modern gentleman.
               </p>
               <p>
                 Join a community that values excellence, loyalty, and the art of 
-                celebration. Whether it's game night, networking events, or simply 
+                celebration. Whether it's game night, live entertainment, or simply 
                 enjoying good company—this is where legends are made.
               </p>
             </div>
@@ -55,10 +77,10 @@ const About = () => {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <div className="relative aspect-[4/5] overflow-hidden">
+            <div className="relative aspect-[4/3] overflow-hidden">
               <motion.img
-                src={aboutImage}
-                alt="The AI Social Klub experience"
+                src={diceImage}
+                alt="Dice in the air - The AI Social Klub"
                 className="w-full h-full object-cover"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.6 }}

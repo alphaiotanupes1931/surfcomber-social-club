@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { Instagram, Facebook } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 const Newsletter = () => {
@@ -56,30 +55,6 @@ const Newsletter = () => {
             </a>
             .
           </p>
-
-          {/* Social Links */}
-          <div className="flex justify-center gap-6 mt-12">
-            <motion.a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground/60 hover:text-primary transition-colors"
-              aria-label="Instagram"
-              whileHover={{ scale: 1.2, rotate: 5 }}
-            >
-              <Instagram size={24} />
-            </motion.a>
-            <motion.a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground/60 hover:text-primary transition-colors"
-              aria-label="Facebook"
-              whileHover={{ scale: 1.2, rotate: -5 }}
-            >
-              <Facebook size={24} />
-            </motion.a>
-          </div>
         </motion.div>
       </div>
     </section>

@@ -69,7 +69,7 @@ const Navbar = () => {
             transition={{ delay: 0.5 }}
           >
             <a
-              href="https://donate.stripe.com/your-donation-link"
+              href="https://cash.app/$antdow"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline inline-flex items-center gap-2"
@@ -139,7 +139,7 @@ const Navbar = () => {
                 ))}
                 
                 <motion.a
-                  href="https://donate.stripe.com/your-donation-link"
+                  href="https://cash.app/$antdow"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-outline inline-flex items-center justify-center gap-2 mt-4"

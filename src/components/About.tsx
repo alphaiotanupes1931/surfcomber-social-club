@@ -11,19 +11,21 @@ const About = () => {
   const fullText = "Get Social in Baltimore";
 
   useEffect(() => {
-    if (isInView && !hasTyped) {
-      let currentIndex = 0;
-      const typingInterval = setInterval(() => {
-        if (currentIndex <= fullText.length) {
-          setDisplayText(fullText.slice(0, currentIndex));
-          currentIndex++;
-        } else {
-          clearInterval(typingInterval);
-        }
-      }, 50);
+    if (!isInView || hasTyped) return;
+
+    let currentIndex = 0;
+    const typingInterval = window.setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayText(fullText.slice(0, currentIndex));
+        currentIndex++;
+        return;
+      }
+
+      window.clearInterval(typingInterval);
       setHasTyped(true);
-      return () => clearInterval(typingInterval);
-    }
+    }, 50);
+
+    return () => window.clearInterval(typingInterval);
   }, [isInView, hasTyped]);
 
   return (

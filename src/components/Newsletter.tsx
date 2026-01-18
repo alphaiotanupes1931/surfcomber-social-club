@@ -1,16 +1,39 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter signup
-    console.log("Newsletter signup:", email);
-    setEmail("");
+    setIsSubmitting(true);
+    setMessage(null);
+
+    try {
+      const { error } = await supabase.from("newsletter_subscribers").insert({
+        email: email.trim(),
+      });
+
+      if (error) {
+        if (error.code === "23505") {
+          setMessage({ type: "error", text: "You're already subscribed!" });
+        } else {
+          throw error;
+        }
+      } else {
+        setMessage({ type: "success", text: "Thanks for subscribing!" });
+        setEmail("");
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Something went wrong. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,12 +64,19 @@ const Newsletter = () => {
             <motion.button 
               type="submit" 
               className="btn-primary"
+              disabled={isSubmitting}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Sign Up
+              {isSubmitting ? "..." : "Sign Up"}
             </motion.button>
           </form>
+
+          {message && (
+            <p className={`text-sm mt-4 ${message.type === "success" ? "text-green-500" : "text-primary"}`}>
+              {message.text}
+            </p>
+          )}
 
           <p className="text-xs text-muted-foreground mt-6">
             By subscribing you agree to our{" "}

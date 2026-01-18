@@ -8,6 +8,7 @@ const navLinks = [
   { name: "Special Events", href: "/upcoming" },
   { name: "Drink Menu", href: "/menus" },
   { name: "Gallery", href: "/gallery" },
+  { name: "Shop", href: "https://shop.aisocialklub.com", external: true },
 ];
 
 const Navbar = () => {
@@ -54,9 +55,15 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index, duration: 0.5 }}
               >
-                <Link to={link.href} className="nav-link">
-                  {link.name}
-                </Link>
+                {link.external ? (
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" className="nav-link">
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link to={link.href} className="nav-link">
+                    {link.name}
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>
@@ -128,13 +135,25 @@ const Navbar = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 * index }}
                   >
-                    <Link
-                      to={link.href}
-                      className="text-2xl font-serif tracking-wide hover:text-primary transition-colors"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {link.name}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-2xl font-serif tracking-wide hover:text-primary transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className="text-2xl font-serif tracking-wide hover:text-primary transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </motion.div>
                 ))}
                 

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 
 const Newsletter = () => {
@@ -7,7 +7,15 @@ const Newsletter = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const ref = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  
+  const contentY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +45,11 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 bg-secondary" ref={ref}>
-      <div className="container mx-auto px-6">
+    <section className="py-24 lg:py-32 bg-secondary overflow-hidden" ref={containerRef}>
+      <div className="container mx-auto px-6" ref={ref}>
         <motion.div 
           className="max-w-xl mx-auto text-center"
+          style={{ y: contentY }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}

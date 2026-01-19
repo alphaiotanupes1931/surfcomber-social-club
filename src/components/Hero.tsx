@@ -9,11 +9,20 @@ const Hero = () => {
   const [isMuted, setIsMuted] = useState(true);
   const fullText = "the ai social klub";
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0.3]);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  
+  // Multi-layer parallax for depth
+  const videoY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.5, 0.9]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   // Typing animation effect
   useEffect(() => {
@@ -47,10 +56,10 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section ref={containerRef} className="relative h-screen w-full overflow-hidden">
       {/* Background Video with Parallax */}
-      <motion.div className="absolute inset-0" style={{ y }}>
-        <div className="absolute inset-0 scale-125">
+      <motion.div className="absolute inset-0" style={{ y: videoY, scale: videoScale }}>
+        <div className="absolute inset-0">
           <video
             ref={videoRef}
             autoPlay
@@ -73,10 +82,11 @@ const Hero = () => {
             />
           </video>
         </div>
-        {/* Dark tint overlay */}
-        <div
+        {/* Dark tint overlay with parallax opacity */}
+        <motion.div
           className="absolute inset-0 z-10"
           style={{
+            opacity: overlayOpacity,
             background:
               "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%)",
           }}
@@ -96,10 +106,10 @@ const Hero = () => {
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </motion.button>
 
-      {/* Content */}
+      {/* Content with parallax */}
       <motion.div 
         className="relative z-20 h-full flex flex-col items-center justify-center text-center px-6"
-        style={{ opacity }}
+        style={{ y: contentY, opacity: contentOpacity }}
       >
         <motion.h1 
           className="hero-title text-foreground mb-8"

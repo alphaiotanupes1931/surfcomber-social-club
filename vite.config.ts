@@ -5,7 +5,9 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/surfcomber-social-club/',
+  // For custom domains (root deploy) we need an absolute base.
+  // If you deploy under a subpath, change this to "/<subpath>/".
+  base: '/',
   server: {
     host: "::",
     port: 8080,

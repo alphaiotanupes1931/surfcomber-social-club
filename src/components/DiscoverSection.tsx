@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import FeatureCard from "./FeatureCard";
 import drinksImage from "@/assets/drinks.jpg";
 import entertainmentImage from "@/assets/entertainment.jpg";
@@ -49,7 +49,20 @@ const features = [
 const DiscoverSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const ref = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  
+  // Parallax for cards - each card moves at different speed
+  const cardY1 = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const cardY2 = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const cardY3 = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const cardY4 = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const cardYValues = [cardY1, cardY2, cardY3, cardY4];
   
   const [displayText, setDisplayText] = useState("");
   const [hasTyped, setHasTyped] = useState(false);
@@ -82,8 +95,8 @@ const DiscoverSection = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 bg-secondary" ref={ref}>
-      <div className="container mx-auto px-6">
+    <section className="py-24 lg:py-32 bg-secondary overflow-hidden" ref={containerRef}>
+      <div className="container mx-auto px-6" ref={ref}>
         <motion.h2 
           className="section-title text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
@@ -96,11 +109,12 @@ const DiscoverSection = () => {
           ) : null}
         </motion.h2>
 
-        {/* Desktop Grid */}
+        {/* Desktop Grid with staggered parallax */}
         <div className="hidden lg:grid lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={index}
+              style={{ y: cardYValues[index] }}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * index }}

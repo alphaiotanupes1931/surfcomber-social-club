@@ -1,11 +1,21 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import baltimoreImage from "@/assets/baltimore-skyline.jpg";
 
 const LocationSection = () => {
   const ref = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  
+  // Parallax effects
+  const imageY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [20, -20]);
 
   const [displayText, setDisplayText] = useState("");
   const [hasTyped, setHasTyped] = useState(false);
@@ -30,12 +40,13 @@ const LocationSection = () => {
   }, [isInView, hasTyped]);
 
   return (
-    <section className="py-24 lg:py-32 bg-background" ref={ref}>
-      <div className="container mx-auto px-6">
+    <section className="py-24 lg:py-32 bg-background overflow-hidden" ref={containerRef}>
+      <div className="container mx-auto px-6" ref={ref}>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Gallery */}
+          {/* Gallery with parallax */}
           <motion.div 
             className="relative"
+            style={{ y: imageY }}
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
@@ -53,8 +64,9 @@ const LocationSection = () => {
             </div>
           </motion.div>
 
-          {/* Content */}
+          {/* Content with parallax */}
           <motion.div
+            style={{ y: contentY }}
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
